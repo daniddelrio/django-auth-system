@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'rest_framework',
     'webapp.apps.WebappConfig',
     'phone_verify',
     'django.contrib.admin',
@@ -71,6 +72,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'djangoauth.wsgi.application'
 
+AUTH_USER_MODEL = 'webapp.User'
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
