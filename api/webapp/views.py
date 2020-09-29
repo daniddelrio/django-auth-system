@@ -1,5 +1,6 @@
 from django.shortcuts import render
 
+from rest_framework import status, viewsets, permissions
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -8,9 +9,16 @@ from phone_verify.api import VerificationViewSet
 from phone_verify import serializers as phone_serializer
 from . import services, serializers
 
-class UserViewSet(VerificationViewSet):
+from webapp.models import *
 
-    @action(detail=False, methods=['POST'], permission_classes=[AllowAny], serializer_class=serializers.PhoneSerializer)
+from oauth2_provider.contrib.rest_framework import TokenHasReadWriteScope, TokenHasScope
+
+class UserViewSet(VerificationViewSet):
+    permission_classes = [permissions.IsAuthenticated, TokenHasReadWriteScope]
+    queryset = User.objects.all()
+    serializer_class = serializers.UserSerializer
+
+    @action(detail=False, methods=['POST'], permission_classes=[AllowAny, TokenHasReadWriteScope], serializer_class=serializers.PhoneSerializer)
     def verify_and_register(self, request):
 
         serializer = phone_serializers.SMSVerificationSerializer(data=request.data)
