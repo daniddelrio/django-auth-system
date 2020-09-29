@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'webapp.apps.WebappConfig',
+    'phone_verify',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -79,6 +80,21 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
+}
+
+PHONE_VERIFICATION = {
+    'BACKEND': 'phone_verify.backends.twilio.TwilioBackend',
+    'OPTIONS': {
+        'SID': 'ACa0dcf51c45b645f5d0a2207cd306eab0',
+        'SECRET': '1f6c2fcdf64c70869cfb15d766bd1158',
+        'FROM': '+12015286282',
+        'SANDBOX_TOKEN':'123456',
+    },
+    'TOKEN_LENGTH': 6,
+    'MESSAGE': 'Welcome to {app}! Please use security code {security_code} to proceed.',
+    'APP_NAME': 'Phone Verify',
+    'SECURITY_CODE_EXPIRATION_TIME': 3600,  # In seconds only
+    'VERIFY_SECURITY_CODE_ONLY_ONCE': False,  # If False, then a security code can be used multiple times for verification
 }
 
 
