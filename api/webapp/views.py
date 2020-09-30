@@ -29,7 +29,14 @@ def activate(request, uidb64, token):
     user.is_active = True
     user.save()
 
-    return Response({ 'email': user.email })
+    response = {
+        'email': user.email,
+        'phone_number': user.phone_number,
+        'first_name': user.first_name,
+        'last_name': user.last_name,
+    }
+
+    return Response(response)
 
 class UserViewSet(VerificationViewSet):
     # permission_classes = [TokenHasReadWriteScope]
@@ -39,7 +46,6 @@ class UserViewSet(VerificationViewSet):
     @action(detail=False, methods=['POST'], permission_classes=[AllowAny], serializer_class=SMSVerificationSerializer)
     def login(self, request):
         phone_number = request.data.get('phone_number', None)
-        print(phone_number)
 
         if not User.objects.filter(phone_number=phone_number).exists():
             return Response({ "message": "User with phone number does not exist" }, status=status.HTTP_400_BAD_REQUEST)
@@ -69,7 +75,7 @@ class UserViewSet(VerificationViewSet):
 
         user_data = {
             'email': user_serializer.validated_data.get('email', None),
-            'password': user_serializer.validated_data.get('password', None),
+            'password': 'test',
             'first_name': user_serializer.validated_data.get('first_name', None),
             'last_name': user_serializer.validated_data.get('last_name', None),
             'phone_number': user_serializer.validated_data.get('phone_number', None),

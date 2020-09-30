@@ -27,10 +27,23 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# CORS_ALLOW_ALL_ORIGINS = True
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+]
+CORS_ALLOW_CREDENTIALS = True
+
+from corsheaders.defaults import default_headers
+
+CORS_ALLOW_HEADERS = default_headers + (
+    'Access-Control-Allow-Origin',
+)
 
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders',
     'webapp.apps.WebappConfig',
     'oauth2_provider',
     'rest_framework',
@@ -45,6 +58,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -75,6 +89,15 @@ TEMPLATES = [
 WSGI_APPLICATION = 'djangoauth.wsgi.application'
 
 AUTH_USER_MODEL = 'webapp.User'
+
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
@@ -135,7 +158,9 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 DEFAULT_DOMAIN = 'localhost:8000'
+DEFAULT_CLIENT_DOMAIN = 'localhost:3000'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'mailertester9@gmail.com'

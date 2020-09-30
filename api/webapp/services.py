@@ -10,7 +10,7 @@ def send_verification_email(user, email):
 	mail_subject = 'Verify your email.'
 	message = render_to_string('webapp/acc_active_email.html', {
 		'user' : user,
-		'default_domain' : settings.DEFAULT_DOMAIN,
+		'default_domain' : settings.DEFAULT_CLIENT_DOMAIN,
 		'uid' : urlsafe_base64_encode(force_bytes(user.pk)),
 		'token' : account_activation_token.make_token(user),
 	})
