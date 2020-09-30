@@ -5,10 +5,11 @@ import Login from './views/Login';
 import Register from './views/Register';
 import VerifyToken from './views/VerifyToken';
 import Details from './views/Details';
+import history from './history'
 
 export default function App() {
   return (
-    <Router>
+    <Router history={history}>
         <Switch>
           <Route path="/" exact component={Home} />
           <Route path="/register" exact component={Register} />
