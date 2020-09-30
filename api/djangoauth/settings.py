@@ -27,6 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+from decouple import config
+
 # CORS_ALLOW_ALL_ORIGINS = True
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOWED_ORIGINS = [
@@ -112,8 +114,8 @@ DATABASES = {
 PHONE_VERIFICATION = {
     'BACKEND': 'phone_verify.backends.twilio.TwilioBackend',
     'OPTIONS': {
-        'SID': 'ACa0dcf51c45b645f5d0a2207cd306eab0',
-        'SECRET': '1f6c2fcdf64c70869cfb15d766bd1158',
+        'SID': config('TWILIO_SID'),
+        'SECRET': config('TWILIO_SECRET'),
         'FROM': '+12015286282',
         'SANDBOX_TOKEN':'123456',
     },
