@@ -10,8 +10,7 @@ default_router = DefaultRouter(trailing_slash=False)
 default_router.register('phone', UserViewSet, basename='phone')
 
 urlpatterns = [
-    # path('audiences/', audience_view.AudienceList.as_view(), name='audience-list'),
-    # path('gcal/events/<int:pk>/', event_auth_view.create_events, name='create_events'),
+    path('activate/<uidb64>/<token>/', views.activate, name='activate'),
 ]
 
 urlpatterns += default_router.urls
