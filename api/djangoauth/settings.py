@@ -159,10 +159,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-DEFAULT_DOMAIN = 'localhost:8000'
-DEFAULT_CLIENT_DOMAIN = 'localhost:3000'
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+DEFAULT_DOMAIN = 'https://django-auth-system.herokuapp.com'
+DEFAULT_CLIENT_DOMAIN = 'https://django-auth-system.netlify.app'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'mailertester9@gmail.com'
