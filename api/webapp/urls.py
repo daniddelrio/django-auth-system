@@ -10,7 +10,7 @@ default_router = DefaultRouter(trailing_slash=False)
 default_router.register('phone', UserViewSet, basename='phone')
 
 urlpatterns = [
-    path('activate/<uidb64>/<token>/', views.activate, name='activate'),
+    path('activate/<uidb64>/<token>/', activate, name='activate'),
 ]
 
 urlpatterns += default_router.urls

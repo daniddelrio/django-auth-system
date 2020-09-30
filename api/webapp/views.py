@@ -10,9 +10,12 @@ from phone_verify import serializers as phone_serializer
 from . import services, serializers
 
 from webapp.models import *
-from webapp.services import create_user_account
+from webapp.services import create_user_account, send_verification_email
 
 from oauth2_provider.contrib.rest_framework import TokenHasReadWriteScope, TokenHasScope
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from phone_verify.serializers import SMSVerificationSerializer
+from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 
 @api_view()
 def activate(request, uidb64, token):
@@ -26,12 +29,34 @@ def activate(request, uidb64, token):
     user.is_active = True
     user.save()
 
-    return Response(user)
+    return Response({ 'email': user.email })
 
 class UserViewSet(VerificationViewSet):
     # permission_classes = [TokenHasReadWriteScope]
     queryset = User.objects.all()
     serializer_class = serializers.UserSerializer
+
+    @action(detail=False, methods=['POST'], permission_classes=[AllowAny], serializer_class=SMSVerificationSerializer)
+    def login(self, request):
+        phone_number = request.data.get('phone_number', None)
+        print(phone_number)
+
+        if not User.objects.filter(phone_number=phone_number).exists():
+            return Response({ "message": "User with phone number does not exist" }, status=status.HTTP_400_BAD_REQUEST)
+
+        user = User.objects.filter(phone_number=phone_number).first()
+        if not user.is_active:
+            return Response({ "message": "User has not activated their email." }, status=status.HTTP_400_BAD_REQUEST)
+
+        serializer = SMSVerificationSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        return Response({
+            'email': user.email,
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'phone_number': user.phone_number,
+        }, status=status.HTTP_200_OK)
 
     @action(detail=False, methods=['POST'], permission_classes=[AllowAny], serializer_class=serializers.PhoneSerializer)
     def verify_and_register(self, request):
@@ -39,9 +64,7 @@ class UserViewSet(VerificationViewSet):
         serializer = phone_serializer.SMSVerificationSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-
         user_serializer = serializers.UserSerializer(data=request.data)
-        # user_serializer = serializers.UserSerializer(data=user_data)
         user_serializer.is_valid(raise_exception=True)
 
         user_data = {
@@ -52,6 +75,6 @@ class UserViewSet(VerificationViewSet):
             'phone_number': user_serializer.validated_data.get('phone_number', None),
         }
         user = services.create_user_account(**user_data)
-        # user = services.create_user_account(email=email, password=password, first_name=first_name, last_name=last_name, phone_number=phone_number)
+        send_verification_email(user, user.email)
 
         return Response(user_serializer.data)

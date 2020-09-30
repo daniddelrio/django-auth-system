@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'webapp.apps.WebappConfig',
     'oauth2_provider',
     'rest_framework',
+    'encrypted_fields',
     'phone_verify',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -111,6 +112,10 @@ OAUTH2_PROVIDER = {
     # 'SCOPES': {'read': 'Read scope', 'write': 'Write scope', 'groups': 'Access to your groups'}
 }
 
+FIELD_ENCRYPTION_KEYS = [
+    "f164ec6bd6fbc4aef5647abc15199da0f9badcc1d2127bde2087ae0d794a9a0b"
+]
+
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
@@ -128,6 +133,15 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+DEFAULT_DOMAIN = 'localhost:8000'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'mailertester9@gmail.com'
+EMAIL_HOST_PASSWORD = 'testingthis'
+EMAIL_PORT = 587
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 
 # Internationalization
